@@ -9,7 +9,7 @@ provider:
   region: us-east-1
   environment:
     VIEWS_TABLE: "views-${self:service}-${opt:stage, self:provider.stage}"
-    USER_TABLE: "user-${self:service}-${opt:stage, self:provider.stage}"
+    USERS_TABLE: "users-${self:service}-${opt:stage, self:provider.stage}"
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -26,16 +26,16 @@ functions:
     description: Increment view count
     events:
       - http: 
-          path: views
+          path: v1/views
           method: post
 
   listViews:
     handler: api/views.list
     memorySize: 128
-    description: List all page views
+    description: List all pageviews
     events:
       - http: 
-          path: candidates
+          path: v1/views
           method: get
   
   submitUser:
@@ -44,7 +44,7 @@ functions:
     description: Submit new user
     events:
       - http: 
-          path: users
+          path: v1/users
           method: post
 
   usersDetails:
@@ -53,12 +53,12 @@ functions:
     description: Get user details
     events:
       - http:
-          path: users/{id}
+          path: v1/users/{id}
           method: get
   
 resources:
   Resources:
-    CandidatesDynamoDbTable:
+    ViewsDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
@@ -75,4 +75,23 @@ resources:
           WriteCapacityUnits: 1
         StreamSpecification:
           StreamViewType: "NEW_AND_OLD_IMAGES"
-        TableName: ${self:provider.environment.CANDIDATE_TABLE}
+        TableName: ${self:provider.environment.VIEWS_TABLE}
+
+    UsersDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: "id"
+            AttributeType: "S"   
+        KeySchema:
+          -
+            AttributeName: "id"
+            KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        StreamSpecification:
+          StreamViewType: "NEW_AND_OLD_IMAGES"
+        TableName: ${self:provider.environment.USERS_TABLE}
