@@ -40,15 +40,26 @@ module.exports.submit = (event, context, callback) => {
 };
 
 module.exports.get = (event, context, callback) => {
-    const response = {
-        statusCode: 200,
-        body: JSON.stringify({
-            message: 'user get endpoint',
-            input: event,
-        }),
+    const params = {
+        TableName: process.env.USERS_TABLE,
+        Key: {
+            id: event.pathParameters.id,
+        },
     };
-    
-    callback(null, response);
+
+    dynamoDb.get(params).promise()
+        .then(result => {
+            const response ={
+                statusCode: 200,
+                body: JSON.stringify(result.Item),
+            };
+            callback(null, response);
+        })
+        .catch(error => {
+            console.error(error);
+            callback(new Error('Couldn\'t found user.'));
+            return;
+        });
 };
 
 const submitUsers = user =>{
