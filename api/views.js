@@ -31,13 +31,22 @@ module.exports.increment = (event, context, callback) => {
 };
 
 module.exports.list = (event, context, callback) => {
-    const response = {
-        statusCode: 200,
-        body: JSON.stringify({
-            message: 'views list endpoint',
-            input: event,
-        }),
-    };
-    
-    callback(null, response);
+    countapi.get('no45v3mkxa.execute-api.us-east-1.amazonaws.com', 'dev', 'v1', 'views')
+        .then(res => {
+            callback(null, {
+                statusCode: 200,
+                body: JSON.stringify({
+                    message: JSON.stringify(res) 
+            })
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        callback(null, {
+            statusCode: 500,
+            body: JSON.stringify({
+                message: 'Unable to get the views.'
+            })
+        })
+    });
 };
