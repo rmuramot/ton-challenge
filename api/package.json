@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.7.2",
+    "countapi-js": "^1.0.2",
     "uuid": "^8.3.2"
   }
 }
