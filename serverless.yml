@@ -30,9 +30,9 @@ functions:
           method: post
 
   listViews:
-    handler: api/views.list
+    handler: api/views.get
     memorySize: 128
-    description: List all pageviews
+    description: Get total number of pageviews
     events:
       - http: 
           path: v1/views

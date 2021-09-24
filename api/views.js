@@ -30,13 +30,13 @@ module.exports.increment = (event, context, callback) => {
     });
 };
 
-module.exports.list = (event, context, callback) => {
+module.exports.get = (event, context, callback) => {
     countapi.get('no45v3mkxa.execute-api.us-east-1.amazonaws.com', 'dev', 'v1', 'views')
         .then(res => {
             callback(null, {
                 statusCode: 200,
                 body: JSON.stringify({
-                    message: JSON.stringify(res) 
+                    message: 'This website has been visited ' + JSON.stringify(res.value) + ' times.'
             })
         });
     })

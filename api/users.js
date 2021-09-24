@@ -24,7 +24,7 @@ module.exports.submit = (event, context, callback) => {
             callback(null, {
                 statusCode: 200,
                 body: JSON.stringify({
-                    message: 'User sucessfully registered'
+                    message: 'User sucessfully registered. User ID ' + res.id
                 })
             });
         })
